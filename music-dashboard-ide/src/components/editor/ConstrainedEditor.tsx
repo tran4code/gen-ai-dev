@@ -74,73 +74,75 @@ export function ConstrainedEditor({ file, tasks, readonly }: ConstrainedEditorPr
     const model = editor.getModel();
     if (!model) return;
 
-    const content = model.getValue();
-    const lines = content.split('\n');
-    const startLine = lines.findIndex((l: string) => l.includes('YOUR CODE START')) + 1;
-    const endLine = lines.findIndex((l: string) => l.includes('YOUR CODE END')) + 1;
+    let isReverting = false;
 
-    if (startLine === 0 || endLine === 0) return;
+    /** Recalculate marker positions from current content */
+    const getMarkerLines = () => {
+      const lines = model.getValue().split('\n');
+      const startLine = lines.findIndex((l: string) => l.includes('YOUR CODE START')) + 1;
+      const endLine = lines.findIndex((l: string) => l.includes('YOUR CODE END')) + 1;
+      return { startLine, endLine, totalLines: lines.length };
+    };
 
-    // Editable range: lines between markers (exclusive of marker lines)
-    const editableStartLine = startLine + 1;
-    const editableEndLine = endLine - 1;
+    /** Apply visual decorations to show read-only vs editable zones */
+    const updateDecorations = () => {
+      const { startLine, endLine, totalLines } = getMarkerLines();
+      if (startLine === 0 || endLine === 0) return;
 
-    // Add decorations for read-only regions
-    const decorations: any[] = [];
+      const decorations: any[] = [];
 
-    // Before editable zone
-    if (editableStartLine > 1) {
+      // Read-only: before editable zone
+      if (startLine > 0) {
+        decorations.push({
+          range: new monaco.Range(1, 1, startLine, 1000),
+          options: { isWholeLine: true, className: 'readonly-line', inlineClassName: 'readonly-text' },
+        });
+      }
+
+      // Read-only: after editable zone
+      if (endLine <= totalLines) {
+        decorations.push({
+          range: new monaco.Range(endLine, 1, totalLines, 1000),
+          options: { isWholeLine: true, className: 'readonly-line', inlineClassName: 'readonly-text' },
+        });
+      }
+
+      // Editable zone highlight
       decorations.push({
-        range: new monaco.Range(1, 1, startLine, 1000),
-        options: {
-          isWholeLine: true,
-          className: 'readonly-line',
-          inlineClassName: 'readonly-text',
-        },
+        range: new monaco.Range(startLine + 1, 1, endLine - 1, 1000),
+        options: { isWholeLine: true, className: 'editable-zone', linesDecorationsClassName: 'editable-zone-gutter' },
       });
-    }
 
-    // After editable zone
-    if (editableEndLine < lines.length) {
-      decorations.push({
-        range: new monaco.Range(endLine, 1, lines.length, 1000),
-        options: {
-          isWholeLine: true,
-          className: 'readonly-line',
-          inlineClassName: 'readonly-text',
-        },
-      });
-    }
+      editor.createDecorationsCollection(decorations);
+    };
 
-    // Editable zone highlight
-    decorations.push({
-      range: new monaco.Range(editableStartLine, 1, editableEndLine, 1000),
-      options: {
-        isWholeLine: true,
-        className: 'editable-zone',
-        linesDecorationsClassName: 'editable-zone-gutter',
-      },
-    });
-
-    editor.createDecorationsCollection(decorations);
+    updateDecorations();
 
     // Constrain edits to editable zone
     editor.onDidChangeModelContent((e: any) => {
-      for (const change of e.changes) {
-        const changeStart = change.range.startLineNumber;
-        const changeEnd = change.range.endLineNumber;
+      if (isReverting) return;
 
-        if (changeStart <= startLine || changeEnd >= endLine) {
-          // Revert: restore full content
-          const restored = getFileContent();
-          const currentPos = editor.getPosition();
-          model.setValue(restored);
-          if (currentPos) editor.setPosition(currentPos);
-          return;
+      const { startLine, endLine } = getMarkerLines();
+      if (startLine === 0 || endLine === 0) return;
+
+      // Check if any change touched read-only regions
+      let touchedReadonly = false;
+      for (const change of e.changes) {
+        if (change.range.startLineNumber <= startLine || change.range.endLineNumber >= endLine) {
+          touchedReadonly = true;
+          break;
         }
       }
 
-      // Extract just the student code portion
+      if (touchedReadonly) {
+        // Revert the change
+        isReverting = true;
+        editor.trigger('keyboard', 'undo', null);
+        isReverting = false;
+        return;
+      }
+
+      // Extract student code and save
       const currentContent = model.getValue();
       const currentLines = currentContent.split('\n');
       const newStartIdx = currentLines.findIndex((l: string) => l.includes('YOUR CODE START'));
@@ -155,6 +157,8 @@ export function ConstrainedEditor({ file, tasks, readonly }: ConstrainedEditorPr
           setCurrentTask(task.id);
         }
       }
+
+      updateDecorations();
     });
   };
 

@@ -10,6 +10,31 @@ import { useStudentCodeStore } from '../stores/studentCodeStore';
  * 3. Run all test cases
  * 4. Store results
  */
+/**
+ * Reconstruct the full Python function from the template + student code.
+ * The student code is the body lines between the markers.
+ */
+function buildFullPython(task: TaskDefinition, studentCode: string): string {
+  const lines = task.fileTemplate.split('\n');
+  const startIdx = lines.findIndex((l) => l.includes('YOUR CODE START'));
+  const endIdx = lines.findIndex((l) => l.includes('YOUR CODE END'));
+
+  if (startIdx === -1 || endIdx === -1) return studentCode;
+
+  // Take everything except the markers and lines between them,
+  // then insert the student code. Also strip comment-only lines like imports
+  // that reference local modules (they don't exist in Pyodide).
+  const before = lines.slice(0, startIdx);
+  const after = lines.slice(endIdx + 1);
+
+  // Filter out fake import lines (e.g., "from data.songs import tracks")
+  const cleanBefore = before.filter(
+    (l) => !l.match(/^\s*from\s+(data|app|utils)\.\S+\s+import/)
+  );
+
+  return [...cleanBefore, studentCode, ...after].join('\n');
+}
+
 export async function executeTask(task: TaskDefinition, studentCode: string): Promise<void> {
   const resultStore = useStudentResultStore.getState();
   resultStore.setExecuting(true);
@@ -17,13 +42,13 @@ export async function executeTask(task: TaskDefinition, studentCode: string): Pr
   try {
     const py = await initPyodide();
 
-    // Build the full Python code: student code defines the function,
-    // then we call it for the dashboard and run tests
+    // Build full Python code with the function definition intact
+    const fullPython = buildFullPython(task, studentCode);
+
     const harness = `
 import json
 
-# Student code
-${studentCode}
+${fullPython}
 
 # Call for dashboard display
 try:
@@ -66,7 +91,7 @@ _dashboard_json
     for (const tc of task.testCases) {
       const testHarness = `
 import json
-${studentCode}
+${fullPython}
 try:
     _test_result = ${tc.callExpression}
     json.dumps(_test_result)

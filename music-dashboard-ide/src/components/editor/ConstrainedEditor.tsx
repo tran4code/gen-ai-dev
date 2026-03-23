@@ -75,6 +75,7 @@ export function ConstrainedEditor({ file, tasks, readonly }: ConstrainedEditorPr
     if (!model) return;
 
     let isReverting = false;
+    let decorationCollection: any = null;
 
     /** Recalculate marker positions from current content */
     const getMarkerLines = () => {
@@ -113,7 +114,11 @@ export function ConstrainedEditor({ file, tasks, readonly }: ConstrainedEditorPr
         options: { isWholeLine: true, className: 'editable-zone', linesDecorationsClassName: 'editable-zone-gutter' },
       });
 
-      editor.createDecorationsCollection(decorations);
+      // Replace previous decorations instead of stacking new ones
+      if (decorationCollection) {
+        decorationCollection.clear();
+      }
+      decorationCollection = editor.createDecorationsCollection(decorations);
     };
 
     updateDecorations();
@@ -167,7 +172,7 @@ export function ConstrainedEditor({ file, tasks, readonly }: ConstrainedEditorPr
       <style>{`
         .readonly-line { opacity: 0.6; }
         .readonly-text { color: #858585 !important; }
-        .editable-zone { background: rgba(29, 185, 84, 0.05); }
+        .editable-zone { background: rgba(29, 185, 84, 0.03); }
         .editable-zone-gutter {
           border-left: 2px solid #1DB954;
           margin-left: 3px;

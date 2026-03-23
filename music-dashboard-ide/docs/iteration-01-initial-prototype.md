@@ -119,6 +119,83 @@ We rejected this in favor of the **three-panel IDE layout** because:
 
 ---
 
+## Design Tradeoff: Python Inside a JavaScript App
+
+### The tension
+Students write Python, but the dashboard is React/TypeScript. There is a hidden translation layer (Pyodide → JSON → Zustand → React) the student never sees. The `.py` files in the file tree don't actually run the dashboard.
+
+### Why Python is the right choice
+
+- **Curricular alignment** — CS1 at this institution teaches Python. Students use Python in their other assignments, exams, and future courses. Teaching JS here would create an isolated skill that doesn't transfer to the rest of their learning.
+- **Lower syntax barrier** — Python's syntax for loops and conditionals is closer to pseudocode. `for track in track_list:` vs `for (let track of trackList) {`. For non-majors writing their first loop, every curly brace and semicolon is extraneous cognitive load.
+- **The abstraction is pedagogically honest** — in real software, components consume data from APIs written in languages they don't control. A Python backend feeding a React frontend is a common real-world architecture. The student is playing the role of "backend logic author," which is a real role.
+- **The learning objectives don't require JS** — we are teaching loops, conditionals, filtering, and aggregation. These are language-agnostic concepts. Python is the vehicle. The dashboard is the motivation, not the subject.
+
+### Why the illusion holds for CS1 non-majors
+- They don't know what React is or what powers web UIs
+- They won't question why a `.py` file makes a dashboard update
+- A student who DOES get curious enough to ask is already succeeding — the environment sparked inquiry
+
+### Why the serialization boundary doesn't matter
+- It is invisible by design, the same way Scratch hides the JavaScript that executes sprite movements, or Jupyter notebooks hide the kernel communication protocol
+- Every educational tool has a translation layer. The question is whether it leaks. In this case it doesn't — the student writes Python, sees results in the UI, never encounters JSON or React
+- The Pyodide load happens once at startup (~3-5s). Per-execution latency is under the 600ms debounce. Students won't notice
+
+### The framing for the paper
+- **The design principle is "AI/system authored context, student authored logic."** The language the context is written in (TypeScript/React) is irrelevant to the student. They never see it, never edit it, never need to understand it. The language the student logic is written in (Python) must match their course.
+- **The dashboard is a motivational context, not a technical subject.** We are not teaching web development. We are teaching programming fundamentals using a music app as the situated context. The dashboard exists to make `filter_by_artist()` meaningful. Whether it's rendered by React or by magic is immaterial to the learning objective.
+- **This mirrors how AI-assisted development works.** Developers increasingly write logic in one context that gets consumed by systems they didn't author. A student writing a Python function that feeds into a system-generated UI is closer to modern practice than a student hand-writing both the logic and the rendering.
+
+---
+
+## Key Concepts: Situated Context vs. Artifact
+
+Two theoretical concepts combine in this prototype. They are distinct and should be cited separately.
+
+**Situated context** (Brown, Collins, & Duguid, 1989 — situated cognition): Learning happens within a context that resembles how the knowledge will actually be used. A "situated" programming exercise is one embedded in a realistic context (building a music app) rather than a decontextualized one (write a function that filters a list of numbers). Situated context can be provided through narrative alone — just telling the student "you're building a music app" and giving them music data.
+
+**Artifact** (Papert, 1991 — constructionism): A tangible thing the learner creates that they can point to, share, and say "I made that." The artifact provides visible evidence of competence. In this prototype, the artifact is the functioning dashboard — when the student's function works, the UI visibly changes.
+
+**How they combine in this prototype:** The student writes code within a realistic context (situated) and sees their code produce a visible, recognizable thing (artifact). The dashboard is simultaneously the situating context and the artifact. The theoretical contribution of this work is showing how they interact: context provides motivation, artifacts provide feedback, and together they scaffold learning in a way that neither does alone.
+
+**Why this distinction matters for experimental design:** To test whether the dashboard adds value, you need to isolate contextualization from artifact feedback. A student who reads "you're building a music app filter" and sees console output has situated context but no artifact. A student who sees the dashboard update has both. If the dashboard group outperforms the narrative group, the difference is attributable to the artifact, not the context.
+
+---
+
+## Possible Experimental Design (Three Conditions)
+
+To cleanly isolate what the prototype contributes, a three-condition between-subjects design:
+
+| Condition | What student sees | Theoretical variable |
+|-----------|------------------|---------------------|
+| **Isolated** | Monaco editor + console output. No file tree, no dashboard. Just "write `filter_by_artist()`" and see printed result. | No context, no artifact |
+| **Narrative** | Same editor + console, but with a written narrative: "You're building the filter feature for a music app. Here's what the data looks like..." | Situated context, no artifact |
+| **Situated** | Full IDE: file tree + constrained editor + live dashboard | Situated context + artifact feedback |
+
+All three conditions use the same Python tasks, the same dataset, the same function signatures. Only the surrounding context and feedback modality differ.
+
+### Research questions this design supports
+1. Does narrative contextualization alone improve self-efficacy and engagement compared to isolated exercises? (Isolated vs Narrative — tests **situated cognition**)
+2. Does artifact feedback improve conceptual understanding beyond narrative contextualization? (Narrative vs Situated — tests **constructionism**)
+3. Is there an interaction between contextualization type and prior programming experience? (tests **CLT** — maybe novices benefit from the dashboard's reduced interpretation load but experienced students don't need it)
+
+### Why this design is strong
+- The Narrative condition controls for "just making it about music" — if the Situated group does better than Narrative, it's not just because music is motivating
+- Effects can be attributed to specific design features (context vs. artifact)
+- Connects to multiple theories, which makes for a richer discussion section
+- The three conditions map to a clear design framework other researchers can build on
+
+### What this means for the prototype
+Building the two comparison conditions (Isolated and Narrative) would be simpler than what already exists — they're essentially the current prototype with panels removed. The Isolated condition is just an editor + console. The Narrative condition adds task descriptions with the music app story.
+
+### Measures
+- **Self-efficacy** — pre/post survey (e.g., adapted CS self-efficacy scale)
+- **Conceptual understanding** — transfer tasks (can the student apply filter/loop to a new domain?)
+- **Engagement/persistence** — learning analytics (tasks attempted, time on task, hint usage)
+- **Identity** — post interview ("do you see yourself as someone who can build things?")
+
+---
+
 ## Conjectures to Test (Preliminary)
 
 These are initial conjectures based on the design principles. They need refinement before Cycle 1.

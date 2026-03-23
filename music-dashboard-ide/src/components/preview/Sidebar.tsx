@@ -1,24 +1,12 @@
 import { Home, Search, Library, Music } from 'lucide-react';
 import { useStudentResultStore } from '../../stores/studentResultStore';
-import { useAppStore } from '../../stores/appStore';
-import { getTaskById } from '../../tasks/registry';
+import { useStudentCodeStore } from '../../stores/studentCodeStore';
 
 export function Sidebar() {
   const results = useStudentResultStore((s) => s.results);
-  const inspectMode = useAppStore((s) => s.inspectMode);
-  const openFile = useAppStore((s) => s.openFile);
-  const setCurrentTask = useAppStore((s) => s.setCurrentTask);
+  const completed = useStudentCodeStore((s) => s.completed);
 
   const trackNamesResult = results['task03-get-track-names'];
-
-  const handleInspectClick = (taskId: string) => {
-    if (!inspectMode) return;
-    const task = getTaskById(taskId);
-    if (task) {
-      openFile(`file-${task.id}`);
-      setCurrentTask(task.id);
-    }
-  };
 
   const trackNames =
     trackNamesResult?.data && !trackNamesResult.error && Array.isArray(trackNamesResult.data)
@@ -41,7 +29,7 @@ export function Sidebar() {
         className="flex-1 overflow-y-auto p-3"
         data-task-id="task03-get-track-names"
         data-task-label="get_track_names()"
-        onClick={() => handleInspectClick('task03-get-track-names')}
+        data-task-complete={completed['task03-get-track-names'] ? 'true' : undefined}
       >
         <div className="text-[10px] font-semibold uppercase tracking-wider text-spotify-light-gray mb-2">
           Track Names
@@ -65,9 +53,9 @@ export function Sidebar() {
             )}
           </div>
         ) : (
-          <div className="text-xs text-spotify-light-gray border border-dashed border-spotify-gray rounded p-2 text-center">
+          <p className="text-xs text-spotify-light-gray">
             Write get_track_names() to see track names here
-          </div>
+          </p>
         )}
       </div>
     </div>

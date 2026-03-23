@@ -27,6 +27,14 @@ def format_duration(ms):
         >>> format_duration(200690)
         "3:20"
     """
+# SOLUTION:
+#     total_seconds = ms // 1000
+#     minutes = total_seconds // 60
+#     seconds = total_seconds % 60
+#     if seconds < 10:
+#         return str(minutes) + ":0" + str(seconds)
+#     else:
+#         return str(minutes) + ":" + str(seconds)
 # --- YOUR CODE START ---
     return "0:00"
 # --- YOUR CODE END ---
@@ -65,9 +73,9 @@ def format_duration(ms):
     },
   ],
   hints: [
-    'To get minutes from milliseconds: first divide by 1000 to get seconds, then divide by 60.',
-    'Use integer division (//) to get whole minutes, and modulo (%) to get remaining seconds.',
-    'Use an f-string with :02d to pad seconds to 2 digits: f"{minutes}:{seconds:02d}"',
+    'First convert milliseconds to total seconds: total_seconds = ms // 1000 (the // means divide and drop the decimal)',
+    'Then get minutes with total_seconds // 60 and leftover seconds with total_seconds % 60 (the % gives the remainder)',
+    'If seconds is less than 10, you need a leading zero: "3:05" not "3:5". Use an if/else to handle this.',
   ],
   dashboardBinding: {
     componentId: 'trackList',

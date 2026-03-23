@@ -28,6 +28,11 @@ def format_track(track):
         >>> format_track({"name": "Anti-Hero", "artist": "Taylor Swift"})
         "Taylor Swift - Anti-Hero"
     """
+# SOLUTION:
+#     artist = track["artist"]
+#     title = track["name"]
+#     result = artist + " - " + title
+#     return result
 # --- YOUR CODE START ---
     return ""
 # --- YOUR CODE END ---
@@ -59,9 +64,9 @@ def format_track(track):
     },
   ],
   hints: [
-    'A track is a dictionary. Access the artist with track["artist"].',
-    'Use the + operator or an f-string to combine the artist and name.',
-    'The format is: track["artist"] + " - " + track["name"]',
+    'A track is a dictionary. You can get the artist with track["artist"] and the title with track["name"].',
+    'Save each one to a variable first: artist = track["artist"]',
+    'Use the + operator to glue strings together: artist + " - " + title',
   ],
   dashboardBinding: {
     componentId: 'trackList',

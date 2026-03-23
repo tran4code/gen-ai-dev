@@ -28,6 +28,12 @@ def filter_long_tracks(track_list, min_duration_ms):
         >>> filter_long_tracks(tracks, 300000)  # tracks over 5 minutes
         [{"name": "After Hours", ...}, {"name": "Money Trees", ...}]
     """
+# SOLUTION:
+#     result = []
+#     for track in track_list:
+#         if track["duration_ms"] > min_duration_ms:
+#             result.append(track)
+#     return result
 # --- YOUR CODE START ---
     return []
 # --- YOUR CODE END ---
@@ -66,9 +72,9 @@ def filter_long_tracks(track_list, min_duration_ms):
     },
   ],
   hints: [
-    'This is similar to filter_by_artist, but compare duration_ms instead of artist.',
-    'Check if track["duration_ms"] > min_duration_ms for each track.',
-    'Use a list comprehension: [t for t in track_list if t["duration_ms"] > min_duration_ms]',
+    'This works just like filter_by_artist, but you compare a number instead of a string.',
+    'Use > to check: if track["duration_ms"] > min_duration_ms:',
+    'Same pattern: empty list, for loop, if statement, append, return.',
   ],
   dashboardBinding: {
     componentId: 'trackList',

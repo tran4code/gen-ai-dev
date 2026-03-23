@@ -28,6 +28,12 @@ def filter_by_artist(track_list, artist_name):
         >>> filter_by_artist(tracks, "Drake")
         [{"name": "God's Plan", ...}, {"name": "Hotline Bling", ...}, ...]
     """
+# SOLUTION:
+#     result = []
+#     for track in track_list:
+#         if track["artist"] == artist_name:
+#             result.append(track)
+#     return result
 # --- YOUR CODE START ---
     return []
 # --- YOUR CODE END ---
@@ -66,9 +72,9 @@ def filter_by_artist(track_list, artist_name):
     },
   ],
   hints: [
-    'Loop through each track and check if track["artist"] equals the artist_name.',
-    'Create a result list and append matching tracks.',
-    'Or use a list comprehension: [t for t in track_list if t["artist"] == artist_name]',
+    'Start with an empty list: result = []',
+    'Use a for loop and an if statement: if track["artist"] == artist_name: then append that track.',
+    'Remember to return result at the end, outside the loop.',
   ],
   dashboardBinding: {
     componentId: 'trackList',

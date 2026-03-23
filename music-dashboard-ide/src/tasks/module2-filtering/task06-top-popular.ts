@@ -28,6 +28,23 @@ def get_top_tracks(track_list, n):
         >>> get_top_tracks(tracks, 3)
         [{"name": "Blinding Lights", "popularity": 96, ...}, ...]
     """
+# SOLUTION:
+#     # Make a copy so we don't change the original list
+#     sorted_list = []
+#     for track in track_list:
+#         sorted_list.append(track)
+#     # Bubble sort by popularity (highest first)
+#     for i in range(len(sorted_list)):
+#         for j in range(len(sorted_list) - 1):
+#             if sorted_list[j]["popularity"] < sorted_list[j + 1]["popularity"]:
+#                 temp = sorted_list[j]
+#                 sorted_list[j] = sorted_list[j + 1]
+#                 sorted_list[j + 1] = temp
+#     # Return the first n tracks
+#     result = []
+#     for i in range(n):
+#         result.append(sorted_list[i])
+#     return result
 # --- YOUR CODE START ---
     return []
 # --- YOUR CODE END ---
@@ -67,9 +84,9 @@ def get_top_tracks(track_list, n):
     },
   ],
   hints: [
-    'Python\'s sorted() function can sort a list. Use the key parameter to sort by popularity.',
-    'Use sorted(track_list, key=lambda t: t["popularity"], reverse=True) to sort descending.',
-    'After sorting, use slicing [:n] to get only the first n tracks.',
+    'First, copy all the tracks into a new list so you can rearrange them without changing the original.',
+    'To sort: use two nested for loops. Compare neighbors and swap if the left one has lower popularity (this is called bubble sort).',
+    'To swap two items: save one in a temp variable, then overwrite. Finally, return just the first n items using another loop.',
   ],
   dashboardBinding: {
     componentId: 'topTracks',

@@ -27,6 +27,11 @@ def get_track_names(track_list):
         >>> get_track_names([{"name": "Anti-Hero", "artist": "Taylor Swift"}])
         ["Anti-Hero"]
     """
+# SOLUTION:
+#     names = []
+#     for track in track_list:
+#         names.append(track["name"])
+#     return names
 # --- YOUR CODE START ---
     return []
 # --- YOUR CODE END ---
@@ -59,9 +64,9 @@ def get_track_names(track_list):
     },
   ],
   hints: [
-    'Create an empty list, then loop through each track and append the name.',
-    'Access the name with track["name"] inside a for loop.',
-    'Or use a list comprehension: [track["name"] for track in track_list]',
+    'Start by creating an empty list: names = []',
+    'Use a for loop to go through each track: for track in track_list:',
+    'Inside the loop, get the name with track["name"] and add it to your list with names.append(...)',
   ],
   dashboardBinding: {
     componentId: 'sidebar',

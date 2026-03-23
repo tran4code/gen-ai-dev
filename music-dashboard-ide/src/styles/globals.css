@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  /* Spotify-inspired color palette */
+  --color-spotify-green: #1DB954;
+  --color-spotify-green-light: #1ed760;
+  --color-spotify-black: #121212;
+  --color-spotify-dark: #181818;
+  --color-spotify-gray: #282828;
+  --color-spotify-light-gray: #b3b3b3;
+  --color-spotify-white: #ffffff;
+  --color-spotify-hover: #2a2a2a;
+
+  /* Editor colors */
+  --color-editor-bg: #1e1e1e;
+  --color-editor-editable: #1a2a1a;
+  --color-editor-border: #1DB954;
+
+  /* Feedback colors */
+  --color-success: #1DB954;
+  --color-error: #e74c3c;
+  --color-warning: #f39c12;
+  --color-info: #3498db;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #535353;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
+}

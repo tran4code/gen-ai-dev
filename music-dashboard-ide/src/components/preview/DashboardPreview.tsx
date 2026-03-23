@@ -3,16 +3,15 @@ import { TrackList } from './TrackList';
 import { StatsCards } from './StatsCards';
 import { PlayerBar } from './PlayerBar';
 import { useAppStore } from '../../stores/appStore';
-import { useStudentCodeStore } from '../../stores/studentCodeStore';
 import { getTaskById } from '../../tasks/registry';
 
 export function DashboardPreview() {
+  const inspectMode = useAppStore((s) => s.inspectMode);
   const openFile = useAppStore((s) => s.openFile);
   const setCurrentTask = useAppStore((s) => s.setCurrentTask);
-  const completed = useStudentCodeStore((s) => s.completed);
 
-  // Click handler: find nearest [data-task-id] and navigate to that file
   const handleClick = (e: React.MouseEvent) => {
+    if (!inspectMode) return;
     const target = (e.target as HTMLElement).closest('[data-task-id]');
     if (!target) return;
     const taskId = target.getAttribute('data-task-id');
@@ -25,31 +24,30 @@ export function DashboardPreview() {
   };
 
   return (
-    <div className="h-full flex flex-col" onClick={handleClick}>
+    <div className={`h-full flex flex-col ${inspectMode ? 'inspect-active' : ''}`} onClick={handleClick}>
       <style>{`
-        /* Always show green dashed outline on sections that need code */
-        [data-task-id] {
+        /* Only show outlines and badges when inspect mode is on */
+        .inspect-active [data-task-id] {
           position: relative;
           cursor: pointer;
           transition: outline-color 0.2s, background 0.2s;
         }
-        [data-task-id]:not([data-task-complete="true"]) {
+        .inspect-active [data-task-id]:not([data-task-complete="true"]) {
           outline: 1.5px dashed rgba(29, 185, 84, 0.5);
           outline-offset: 2px;
           border-radius: 4px;
         }
-        [data-task-id]:not([data-task-complete="true"]):hover {
+        .inspect-active [data-task-id]:not([data-task-complete="true"]):hover {
           outline: 2px solid #1DB954;
           background: rgba(29, 185, 84, 0.05);
         }
-        /* Completed sections get a subtle solid green border */
-        [data-task-id][data-task-complete="true"] {
+        .inspect-active [data-task-id][data-task-complete="true"] {
           outline: 1px solid rgba(29, 185, 84, 0.2);
           outline-offset: 2px;
           border-radius: 4px;
         }
-        /* Function name badge */
-        [data-task-label]::after {
+        /* Function name badge — only in inspect mode */
+        .inspect-active [data-task-label]::after {
           content: attr(data-task-label);
           position: absolute;
           top: -10px;
@@ -66,12 +64,10 @@ export function DashboardPreview() {
           opacity: 0.7;
           transition: opacity 0.2s;
         }
-        [data-task-id]:hover [data-task-label]::after,
-        [data-task-label]:hover::after {
+        .inspect-active [data-task-id]:hover::after {
           opacity: 1;
         }
-        /* Completed badge turns muted */
-        [data-task-complete="true"][data-task-label]::after {
+        .inspect-active [data-task-complete="true"][data-task-label]::after {
           background: rgba(29, 185, 84, 0.3);
           color: rgba(255, 255, 255, 0.6);
         }

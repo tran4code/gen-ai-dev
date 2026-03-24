@@ -190,6 +190,179 @@ Plus a fifth condition: **Prompt reconstruction** — write the prompt that coul
 
 ---
 
+## What Code Comprehension Actually Matters (As AI Gets Better)
+
+### The "LLMs keep getting better" test
+
+If we assume LLMs will continue improving — better at inferring intent from vague prompts, asking clarifying questions, producing correct code — then which comprehension skills remain necessary and which become obsolete?
+
+**Will NOT matter (AI handles it):**
+- Surface-level tracing — "What does line 7 do?" AI can explain any line on demand
+- Function-level summarization — "What does this function do?" AI can summarize any function
+- Syntax comprehension — understanding language-specific constructs. AI translates between representations
+
+**WILL matter (requires human judgment about the problem domain):**
+
+1. **Behavioral verification** — "Does this function correctly handle [specific scenario]?" The human must know what "correct" means for THEIR problem. AI can generate code but can't fully determine if the output is right for the engineer's specific use case. An AI can write a load calculation function, but the civil engineer has to know whether the output makes physical sense.
+
+2. **System-level comprehension** — "If I change this function, what else breaks?" Understanding relationships between components that aren't explicit in any single function. This is about mental models of how data flows through a system and where dependencies exist.
+
+3. **Modification planning** — "To add feature X, which functions do I need to touch, in what order, and what are the downstream effects?" This maps requirements to code structure. It requires understanding the system well enough to predict the blast radius of a change.
+
+4. **Fault localization** — "The output is wrong. Which component is the cause?" Tracing backwards from incorrect output to the faulty function in a system you didn't build. This is debugging without authorship knowledge.
+
+5. **Specification of intent** — Describing what you want clearly enough that any tool (AI, colleague, library) can produce it. This is NOT "prompting" as a specific syntax skill — it's the ability to externalize your intent precisely. The bottleneck is the human's clarity of thought, not the tool's interface. This skill is durable even as prompting interfaces change.
+
+### Why this matters for the dissertation
+This narrows the research question from "code comprehension" (too broad) to "the specific comprehension skills that remain necessary as AI handles more generation." That's a more defensible and more interesting contribution.
+
+### Engineering analogy (keep in back pocket)
+Engineers already work this way in their own disciplines:
+- A civil engineer changes a beam specification → must understand the downstream effects on load calculations, foundation requirements, and safety margins
+- An electrical engineer modifies a circuit component → must understand the effects on signal flow, power dissipation, and timing
+- A software engineer modifies a function in an AI-generated codebase → must understand the downstream effects on other functions, data flow, and system behavior
+
+The skill of **impact analysis** — understanding how a change propagates through a system — is universal across engineering disciplines. For CS1 engineering students, this framing makes the skill feel like engineering, not just programming.
+
+---
+
+## Pedagogical Activities That Build These Skills
+
+**The overarching research interest:** What activities or assignments help students develop the durable code comprehension skills (behavioral verification, system comprehension, modification planning, fault localization)?
+
+Each activity below targets specific skills. A dissertation could study 2-3 of these comparatively.
+
+### Activity 1: Test case generation
+**What student does:** Given an unfamiliar function, write 2-3 test cases. Predict what the function returns for specific inputs. Determine edge cases.
+
+**What it builds:**
+- Behavioral verification — to write a test, you must understand what the function SHOULD do
+- Forces the student to form a hypothesis about the code's behavior and check it
+- Edge case reasoning — "what happens with an empty list? a single item? a tie in popularity?"
+
+**Why it's strong:**
+- Active, not passive — student generates rather than reads
+- Testing effect (Roediger & Karpicke) — predicting output strengthens memory and understanding
+- The activity IS the assessment — test quality reveals comprehension quality
+- Authentic to engineering — testing is verification, which engineers already value
+
+**Connection to the prototype:** The music dashboard IDE already has test cases for each function. This activity is a natural fit — students could write tests and see them run against the actual functions.
+
+### Activity 2: Change impact analysis
+**What student does:** Given a codebase with 6-8 functions and a proposed change (new feature request, bug fix, or requirement change), identify:
+1. Which functions are affected
+2. What the downstream effects are
+3. What order changes should be made
+4. What could go wrong
+
+**What it builds:**
+- System-level comprehension — must understand how components connect
+- Modification planning — must reason about dependencies and order
+- Downstream reasoning — the engineering impact analysis skill
+
+**Why it's strong:**
+- Maps directly to how engineers think in their own disciplines
+- Tests the highest-level comprehension (system, not surface)
+- No code writing required — pure reasoning about structure and relationships
+- Authentic to industry — this is literally what senior developers do during code review and sprint planning
+
+**Back pocket idea:** Could frame this as "engineering change orders" — a term engineering students already know. A change order in manufacturing triggers an impact analysis. A feature request in software should trigger the same.
+
+### Activity 3: Prompt reconstruction
+**What student does:** Given a function they didn't write, write the natural language description (prompt) that could have produced it. Then optionally: feed their prompt to an LLM and compare the generated code against the original.
+
+**What it builds:**
+- Specification of intent — must understand the function well enough to describe it
+- Function-level comprehension — reverse-engineering purpose from implementation
+- The gap between their prompt and the original reveals what they misunderstood
+
+**Why it's strong:**
+- Supported by findings that students comprehend code better when they see the prompt that created it (reverse direction: can they produce the prompt?)
+- The activity IS the assessment — prompt quality measures comprehension
+- Functional equivalence testing gives an objective measure
+
+**Durability concern:** This activity is about specification skill, which is durable. But the specific format (writing a prompt for an LLM) might feel dated if LLM interfaces change. Could reframe as "write the specification" rather than "write the prompt."
+
+### Activity 4: LLM-assisted exploration
+**What student does:** Given an unfamiliar codebase, use an LLM to ask questions about it for 15 minutes. "What does this function do?" "How does data flow from X to Y?" "What would happen if I changed Z?"
+
+**What it builds:**
+- Potentially all levels of comprehension — depends on what questions the student asks
+- AI collaboration skills — learning to ask productive questions
+
+**Why it's interesting:**
+- Tests whether AI can serve as a comprehension tool, not just a generation tool
+- The questions students ask reveal their comprehension strategy
+- May produce "illusion of understanding" — student feels they understand because AI explained it clearly, but they never built their own mental model
+
+**Risk:** This might perform well on immediate comprehension tasks but poorly on transfer tasks. Understanding an explanation is not the same as constructing understanding.
+
+### Activity 5: Annotated code reading (control)
+**What student does:** Read the codebase with detailed inline comments explaining each function's purpose, parameters, logic, and connections to other functions.
+
+**What it builds:**
+- Baseline familiarity with the codebase
+- Whatever passive reading provides
+
+**Why include it:**
+- Standard pedagogical practice — the "how we've always done it" baseline
+- If any active condition beats this, you've shown the activity adds value beyond documentation
+
+### Activity 6: Raw code reading (control)
+**What student does:** Read the codebase with no comments, no help. Just the code.
+
+**What it builds:**
+- Whatever unguided reading provides
+- Forces self-explanation (Chi) since there's no external explanation available
+
+**Why include it:**
+- Pure baseline — any other condition that beats this is adding value
+- Interestingly, might outperform annotated reading if self-explanation is more powerful than provided explanations
+
+---
+
+## Study Design: The Modification Planning Experiment
+
+**Central research question:** Which preparatory activity best equips CS1 students to plan modifications to an unfamiliar codebase?
+
+### Protocol
+1. All students receive the same unfamiliar codebase (6-8 Python functions, ~100-150 lines, domain-relevant)
+2. Students are randomly assigned to one condition
+3. 15 minutes of the assigned preparatory activity
+4. ALL students then get the same transfer task: a feature request requiring them to plan modifications to the codebase
+5. Post-task comprehension assessment and confidence survey
+
+### Conditions (choose 3-4 for feasibility)
+
+| Condition | Activity | Primary skill targeted |
+|-----------|----------|----------------------|
+| Raw code reading | Read code, no help | Baseline |
+| LLM Q&A | Ask an LLM questions | AI-assisted comprehension |
+| Test case generation | Write 2-3 tests per function | Behavioral verification |
+| Change impact analysis | Predict effects of 3 hypothetical changes | System comprehension |
+| Prompt reconstruction | Write the spec for each function | Specification / intent |
+
+### The transfer task (same for all conditions)
+"Here's a new feature request: [specific modification]. Plan how you'd implement it:
+- Which existing functions need to change?
+- What new functions are needed?
+- In what order should changes be made?
+- What could go wrong?"
+
+### Measures
+- **Plan quality** — rubric-scored: correct function identification, reasonable ordering, downstream awareness
+- **Comprehension questions** — "What would happen if function X returned an empty list instead of None?" (tests system-level understanding)
+- **Confidence calibration** — self-reported confidence vs actual performance (are students who feel confident actually correct?)
+- **Process data** — in LLM condition: what questions asked. In test condition: test quality. In impact condition: prediction accuracy.
+
+### Why this design works
+- The transfer task is the SAME across all conditions, so differences are attributable to the preparatory activity
+- Tests the durable skills (modification planning, system comprehension) not the temporary ones (tracing, summarization)
+- Feasible in one lab session (~50 minutes)
+- Interesting regardless of outcome — even if all conditions perform equally, the confidence calibration data tells you something about the illusion of understanding
+
+---
+
 ## How the Threads Connect
 
 These aren't separate research programs — they're two angles on the same underlying question:

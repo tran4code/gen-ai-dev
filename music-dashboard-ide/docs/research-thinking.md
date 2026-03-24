@@ -1,6 +1,51 @@
 # Research Thinking — Organized Threads
 
-## The Two Big Questions
+---
+
+## The Problem Landscape
+
+What we're seeing right now, and the findings that motivate this work:
+
+### 1. The unsanctioned AI problem
+- Instructors create sanctioned AI policies (approved tools, approved use cases), but students use unsanctioned AI regardless
+- Even in courses that ban AI, students can bypass traditional assignments with ChatGPT and there is no reliable way to detect it
+- Policing AI use is a losing strategy — the tools are free, ubiquitous, and improving
+- **Implication:** We must design pedagogy that assumes students have unrestricted AI access, not pedagogy that depends on restricting it
+
+### 2. The prompting gap
+- Novice programmers cannot prompt to the same specification as professionals
+- Mounting evidence that prompt quality directly affects code quality — vague prompts produce vague code
+- Students don't know what they don't know — they can't specify edge cases, types, or constraints they haven't learned yet
+- The skill of translating intent into precise natural language specification is not currently taught in CS1
+- **Implication:** Prompting is a skill that requires deliberate practice, not just exposure
+
+### 3. The code comprehension crisis
+- AI generates code that nobody wrote — there are no design decisions to remember, no process to recall
+- Students can produce working code they cannot explain, modify, or debug
+- Developers already spend 60-80% of time reading code; AI makes this worse because the code is unfamiliar by default
+- Engineering students specifically need to trust code before deploying it — a structural analysis script that's wrong is dangerous
+- **Implication:** Code comprehension must become a primary learning objective, not a byproduct of code writing
+
+### 4. The workforce readiness question
+- The workforce increasingly expects AI-assisted development as a baseline skill
+- Students who are told "don't use AI" are being prepared for a workforce that doesn't exist
+- But students who blindly copy-paste AI output are also unprepared — they can't debug, extend, or take responsibility for the code
+- The needed skill set is: specify precisely, evaluate critically, decompose effectively, orchestrate multi-step workflows
+- **Implication:** CS1 must teach productive AI collaboration, not just programming fundamentals
+
+### 5. Trust and confidence in AI-generated code
+- Students need to build **calibrated trust** — not blind trust, not blanket distrust
+- Right now students either trust everything the AI produces (dangerous) or distrust everything (unproductive)
+- Calibrated trust means: "I can verify this function works for these inputs, I've tested these edge cases, I understand the logic well enough to modify it"
+- Trust should be earned through verification activities, not assumed
+- **Implication:** The pedagogy needs to build students' confidence in their ability to evaluate code, so they can make informed trust decisions rather than guessing
+
+### The meta-problem
+All five problems share a root cause: **CS education was designed for a world where humans write all the code.** In that world, writing IS understanding — if you wrote the for loop, you understand the for loop. In the AI era, writing and understanding are decoupled. You can have code without understanding (copy from AI) or understanding without code (you know what you want but can't implement it). The pedagogical challenge is reconnecting them.
+
+---
+
+## The Research Threads
 
 ### Thread A: Personalized Authentic Environments
 **Core question:** Can LLMs generate personalized, engaging programming environments tailored to individual student interests — and does that personalization improve learning?

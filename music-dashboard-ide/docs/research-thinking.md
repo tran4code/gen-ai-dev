@@ -123,6 +123,73 @@ Plus a fifth condition: **Prompt reconstruction** — write the prompt that coul
 
 ---
 
+### Thread C: CS1 Redesign Landscape — What Others Are Doing
+**Core question:** What approaches are others taking to adapt CS1 for the AI era, and where is the gap my work fills?
+
+**Known approaches (needs literature review):**
+- Prompt-focused CS0/CS1 courses (prompting as the primary programming activity)
+- AI-allowed with traditional assignments (embrace but don't scaffold)
+- AI-resistant assessment (oral exams, live coding, explanation requirements)
+- Guardrailed AI tools (CodeHelp, limited-response tutors)
+- Explain-in-plain-English requirements alongside code
+- Property-based testing / formal specification approaches (the paper Keith has)
+
+**What's missing in the landscape (potential gap):**
+- Most approaches either restrict AI or allow it freely. Few scaffold HOW to use it
+- Almost no work on teaching prompting as a deliberate skill within CS1
+- Almost no work on code comprehension of AI-generated code specifically
+- The intersection of comprehension + prompting (prompt reconstruction) appears unstudied
+
+**TODO:**
+- [ ] Map 8-10 key papers on CS1 redesign for AI
+- [ ] Identify which gap this dissertation fills
+- [ ] Read the property-based / specification paper Keith mentioned
+- [ ] Look for prior work on prompt reconstruction or similar activities
+
+---
+
+### Thread D: Understanding the Population
+**Core question:** Who are engineering CS1 students in 2026, and what do they already know/do with AI?
+
+**What we need to know before designing a study:**
+- What's their motivation for taking CS1? (Required? Interest? Career?)
+- What's their prior programming experience?
+- What AI tools do they currently use, how often, and for what?
+- What's their self-efficacy around programming?
+- What's their self-efficacy around AI tool use?
+- Do they see AI as a shortcut or a tool?
+
+**Why this matters:**
+- Dr. Price's null effect study failed partly because students were already motivated — the intervention couldn't improve on a ceiling
+- If students already use AI daily, a "scaffolded AI" intervention might not feel novel
+- If students have zero programming experience, comprehension tasks need to be calibrated appropriately
+- Engineering students' relationship to code is instrumental ("I need this for my career") not intrinsic ("I love programming") — this affects motivation mechanisms
+
+**TODO:**
+- [ ] Design a pre-study survey for the target population
+- [ ] Identify existing instruments for programming self-efficacy and AI usage
+- [ ] Run the survey in a CS1 section before designing the intervention
+
+---
+
+## Biases and Assumptions to Check
+
+1. **Environment bias** — Am I assuming the visual environment matters more than the learning activity? Dr. Price's null effect study suggests it might not. Need to be clear: is the environment the IV, or is the activity?
+
+2. **Prompting permanence** — Is prompting a durable skill or a temporary one? LLMs are getting better at handling vague input. Code comprehension and verification are more future-proof.
+
+3. **Comprehension specificity** — "Code comprehension" is too broad. Need to operationalize at a specific level:
+   - Surface (tracing lines)
+   - Function (summarizing purpose)
+   - System (understanding how pieces connect)
+   - Modification (knowing what to change for a new requirement)
+
+4. **Crisis assumption** — Is the "code comprehension crisis" empirically established or theoretical? Need evidence that AI use actually degrades comprehension, not just concern that it might.
+
+5. **Population assumption** — Why engineering CS1 specifically? What makes this population different from CS majors? If nothing, either broaden or make the argument.
+
+---
+
 ## How the Threads Connect
 
 These aren't separate research programs — they're two angles on the same underlying question:
